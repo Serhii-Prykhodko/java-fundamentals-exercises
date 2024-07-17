@@ -3,9 +3,13 @@ package com.bobocode.fp;
 import com.bobocode.util.ExerciseNotCompletedException;
 
 import java.math.BigDecimal;
+import java.nio.Buffer;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.Executor;
 import java.util.function.*;
+import java.util.random.RandomGenerator;
 
 /**
  * {@link CrazyLambdas} is an exercise class. Each method returns a functional interface and it should be implemented
@@ -27,7 +31,7 @@ public class CrazyLambdas {
      * @return a string supplier
      */
     public static Supplier<String> helloSupplier() {
-        throw new ExerciseNotCompletedException();
+        return () -> "Hello";
     }
 
     /**
@@ -36,7 +40,7 @@ public class CrazyLambdas {
      * @return a string predicate
      */
     public static Predicate<String> isEmptyPredicate() {
-        throw new ExerciseNotCompletedException();
+        return s -> s.isEmpty();
     }
 
     /**
@@ -46,7 +50,8 @@ public class CrazyLambdas {
      * @return function that repeats Strings
      */
     public static BiFunction<String, Integer, String> stringMultiplier() {
-        throw new ExerciseNotCompletedException();
+        return (s, n) -> s.repeat(n);
+
     }
 
     /**
@@ -56,9 +61,8 @@ public class CrazyLambdas {
      * @return function that converts adds dollar sign
      */
     public static Function<BigDecimal, String> toDollarStringFunction() {
-        throw new ExerciseNotCompletedException();
+        return b -> "$" + b.toString();
     }
-
     /**
      * Receives two parameter that represent a range and returns a {@link Predicate<String>} that verifies if string
      * length is in the specified range. E.g. min <= length < max
@@ -68,7 +72,7 @@ public class CrazyLambdas {
      * @return a string predicate
      */
     public static Predicate<String> lengthInRangePredicate(int min, int max) {
-        throw new ExerciseNotCompletedException();
+        return s -> s.length() >= min && s.length() <= max;
     }
 
     /**
@@ -77,7 +81,7 @@ public class CrazyLambdas {
      * @return int supplier
      */
     public static IntSupplier randomIntSupplier() {
-        throw new ExerciseNotCompletedException();
+        return () -> RandomGenerator.getDefault().nextInt();
     }
 
 
@@ -87,7 +91,7 @@ public class CrazyLambdas {
      * @return int operation
      */
     public static IntUnaryOperator boundedRandomIntSupplier() {
-        throw new ExerciseNotCompletedException();
+        return b -> RandomGenerator.getDefault().nextInt(b);
     }
 
     /**
@@ -96,7 +100,7 @@ public class CrazyLambdas {
      * @return square operation
      */
     public static IntUnaryOperator intSquareOperation() {
-        throw new ExerciseNotCompletedException();
+        return i -> i * i;
     }
 
     /**
@@ -105,7 +109,7 @@ public class CrazyLambdas {
      * @return binary sum operation
      */
     public static LongBinaryOperator longSumOperation() {
-        throw new ExerciseNotCompletedException();
+        return (a, b) -> a + b;
     }
 
     /**
@@ -114,7 +118,7 @@ public class CrazyLambdas {
      * @return string to int converter
      */
     public static ToIntFunction<String> stringToIntConverter() {
-        throw new ExerciseNotCompletedException();
+        return n -> Integer.parseInt(n);
     }
 
     /**
@@ -125,7 +129,7 @@ public class CrazyLambdas {
      * @return a function supplier
      */
     public static Supplier<IntUnaryOperator> nMultiplyFunctionSupplier(int n) {
-        throw new ExerciseNotCompletedException();
+        return () -> x -> x * n;
     }
 
     /**
@@ -134,7 +138,7 @@ public class CrazyLambdas {
      * @return function that composes functions with trim() function
      */
     public static UnaryOperator<Function<String, String>> composeWithTrimFunction() {
-        throw new ExerciseNotCompletedException();
+        return s -> s.compose(s1 -> s1.trim());
     }
 
     /**
@@ -145,8 +149,14 @@ public class CrazyLambdas {
      * @return a thread supplier
      */
     public static Supplier<Thread> runningThreadSupplier(Runnable runnable) {
-        throw new ExerciseNotCompletedException();
+       return  () -> {
+           Thread thread = new Thread(runnable);
+           thread.start();
+           return thread;
+       };
+
     }
+
 
     /**
      * Returns a {@link Consumer} that accepts {@link Runnable} as a parameter and runs in a new thread.
@@ -154,7 +164,7 @@ public class CrazyLambdas {
      * @return a runnable consumer
      */
     public static Consumer<Runnable> newThreadRunnableConsumer() {
-        throw new ExerciseNotCompletedException();
+        return runnable -> runnable.run();
     }
 
     /**
@@ -164,7 +174,11 @@ public class CrazyLambdas {
      * @return a function that transforms runnable into a thread supplier
      */
     public static Function<Runnable, Supplier<Thread>> runnableToThreadSupplierFunction() {
-        throw new ExerciseNotCompletedException();
+        return runnable -> () -> {
+            Thread thread = new Thread(runnable);
+            thread.start();
+            return thread;
+        };
     }
 
     /**
