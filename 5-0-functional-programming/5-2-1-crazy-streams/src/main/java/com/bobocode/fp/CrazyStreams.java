@@ -201,7 +201,12 @@ public class CrazyStreams {
      * @return a map where key is a letter and value is its count in all first names
      */
     public Map<Character, Long> getCharacterFrequencyInFirstNames() {
-        throw new ExerciseNotCompletedException();
+        Map<Character, Long> map = new HashMap<>();
+           accounts.stream()
+                   .flatMapToInt(a -> a.getFirstName().chars())
+                   .mapToObj(i -> (char) i)
+                   .forEach(c -> map.put(c, map.getOrDefault(c, 0L) + 1));
+        return map;
     }
 
     /**
@@ -212,8 +217,20 @@ public class CrazyStreams {
      * @return a map where key is a letter and value is its count ignoring case in all first and last names
      */
     public Map<Character, Long> getCharacterFrequencyIgnoreCaseInFirstAndLastNames(int nameLengthBound) {
-        throw new ExerciseNotCompletedException();
-    }
+        Map<Character, Long> map = new HashMap<>();
 
+        accounts.stream()
+                .filter(a -> a.getFirstName().length() >= nameLengthBound)
+                .flatMapToInt(a -> a.getFirstName().toLowerCase().chars())
+                .mapToObj(i -> (char) i)
+                .forEach(c -> map.put(c, map.getOrDefault(c, 0L) + 1));
+
+        accounts.stream()
+                .filter(a -> a.getLastName().length() >= nameLengthBound)
+                .flatMapToInt(a -> a.getLastName().toLowerCase().chars())
+                .mapToObj(i -> (char) i)
+                .forEach(c -> map.put(c, map.getOrDefault(c, 0L) + 1));
+                return map;
+    }
 }
 
